@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="../tests/Licitaciones.FunctionalTests/Licitaciones.FunctionalTests.csproj" />
+  <Project Path="../tests/Licitaciones.IntegrationTests/Licitaciones.IntegrationTests.csproj" />
+  <Project Path="../tests/Licitaciones.UnitTests/Licitaciones.UnitTests.csproj" />
+  <Project Path="Licitaciones.Api/Licitaciones.Api.csproj" />
+  <Project Path="Licitaciones.Application/Licitaciones.Application.csproj" />
+  <Project Path="Licitaciones.Domain/Licitaciones.Domain.csproj" />
+  <Project Path="Licitaciones.Infrastructure/Licitaciones.Infrastructure.csproj" />
+  <Project Path="Licitaciones.Web/Licitaciones.Web.csproj" />
+</Solution>
