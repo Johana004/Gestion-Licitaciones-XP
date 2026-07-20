@@ -1,34 +1,32 @@
 version: '3.8'
 
 services:
-  # Servicio de la Base de Datos PostgreSQL
-  postgres-db:
-    image: postgres:16-alpine
-    container_name: licitaciones-db
-    environment:
-      POSTGRES_DB: LicitacionesDb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: TuPasswordSegura123!
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  # Servicio de la Aplicación .NET 9
-  web-api:
-    image: gestion-licitaciones-app
+  licitaciones-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: licitaciones-api
+    image: gestion-licitaciones-app:latest
+    container_name: gestion-licitaciones-api
     ports:
-      - "5000:80"
-      - "5001:443"
+      - "8080:80"
+      - "8081:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres-db;Database=LicitacionesDb;Username=postgres;Password=TuPasswordSegura123!
+      - ConnectionStrings__DefaultConnection=Host=licitaciones-db;Port=5432;Database=LicitacionesDb;Username=postgres;Password=postgres
     depends_on:
-      - postgres-db
+      - licitaciones-db
+
+  licitaciones-db:
+    image: postgres:16-alpine
+    container_name: licitaciones-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=LicitacionesDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
