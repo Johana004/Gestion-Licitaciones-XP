@@ -12,7 +12,6 @@ public class TipoCambioConfiguration : IEntityTypeConfiguration<TipoCambio>
 
         builder.HasKey(tc => tc.Id);
 
-        // Los montos monetarios o tasas de conversión siempre deben configurarse con precisión decimal explícita (18,2 o 18,4)
         builder.Property(tc => tc.Valor)
             .IsRequired()
             .HasColumnType("decimal(18,4)");
@@ -22,5 +21,14 @@ public class TipoCambioConfiguration : IEntityTypeConfiguration<TipoCambio>
 
         builder.Property(tc => tc.Activo)
             .IsRequired();
+
+        // Seed data usando objeto anónimo para saltar setters privados
+        builder.HasData(new
+        {
+            Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+            Valor = 520.0000m,
+            FechaVigencia = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
+            Activo = true
+        });
     }
 }
