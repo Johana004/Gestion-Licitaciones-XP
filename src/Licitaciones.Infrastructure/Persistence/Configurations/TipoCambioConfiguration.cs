@@ -8,27 +8,24 @@ public class TipoCambioConfiguration : IEntityTypeConfiguration<TipoCambio>
 {
     public void Configure(EntityTypeBuilder<TipoCambio> builder)
     {
-        builder.ToTable("TiposCambio");
+        builder.HasKey(t => t.Id);
 
-        builder.HasKey(tc => tc.Id);
-
-        builder.Property(tc => tc.Valor)
-            .IsRequired()
-            .HasColumnType("decimal(18,4)");
-
-        builder.Property(tc => tc.FechaVigencia)
+        builder.Property(t => t.CRCPorUSD)
+            .HasPrecision(18, 2)
             .IsRequired();
 
-        builder.Property(tc => tc.Activo)
-            .IsRequired();
+        var now = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-        // Seed data usando objeto anónimo para saltar setters privados
-        builder.HasData(new
-        {
-            Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-            Valor = 520.0000m,
-            FechaVigencia = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
-            Activo = true
-        });
+        builder.HasData(
+            new 
+            {
+                Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+                CRCPorUSD = 505.50m, // <-- Usar CRCPorUSD en lugar de Valor
+                FechaVigencia = now,
+                Activo = true,
+                CreatedAt = now,
+                UpdatedAt = now
+            }
+        );
     }
 }

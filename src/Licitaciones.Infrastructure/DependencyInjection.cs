@@ -1,6 +1,7 @@
 using Licitaciones.Domain.Repositories;
 using Licitaciones.Infrastructure.Persistence;
 using Licitaciones.Infrastructure.Persistence.Repositories;
+using Licitaciones.Infrastructure.Repositories;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,4 +26,6 @@ public static class DependencyInjection
 
         return services;
     }
+
+    
 }

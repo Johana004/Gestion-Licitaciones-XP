@@ -11,6 +11,7 @@ public class LicitacionesDbContext : DbContext
     public DbSet<TipoCambio> TiposCambio => Set<TipoCambio>();
     public DbSet<Licitacion> Licitaciones => Set<Licitacion>();
     public DbSet<Oferta> Ofertas => Set<Oferta>();
+    public DbSet<NivelAprobacion> NivelesAprobacion => Set<NivelAprobacion>();
 
     public LicitacionesDbContext(DbContextOptions<LicitacionesDbContext> options) : base(options)
     {
