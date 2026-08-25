@@ -1,0 +1,70 @@
+namespace Licitaciones.Domain.Entities;
+
+public enum EstadoLicitacion
+{
+    Borrador,
+    Publicada,
+    Cerrada
+}
+
+public class Licitacion
+{
+    public Guid Id { get; private set; }
+    public string Codigo { get; private set; } = string.Empty;
+    public string CodigoNormalizado { get; private set; } = string.Empty;
+    public string Titulo { get; private set; } = string.Empty;
+    public EstadoLicitacion Estado { get; private set; }
+    public DateTimeOffset FechaCierre { get; private set; }
+    public decimal PresupuestoEstimadoCRC { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset UpdatedAt { get; private set; }
+    public uint VersionConcurrencia { get; private set; }
+
+    private Licitacion() { } // EF Core
+
+    public Licitacion(string codigo, string titulo, decimal presupuestoEstimadoCRC, DateTimeOffset fechaCierre, DateTimeOffset fechaActual)
+    {
+        if (string.IsNullOrWhiteSpace(codigo))
+            throw new ArgumentException("El código no puede estar vacío.");
+
+        if (string.IsNullOrWhiteSpace(titulo))
+            throw new ArgumentException("El título no puede estar vacío.");
+
+        if (presupuestoEstimadoCRC <= 0)
+            throw new ArgumentException("El presupuesto debe ser mayor a cero.");
+
+        if (fechaCierre <= fechaActual)
+            throw new ArgumentException("La fecha de cierre debe ser futura.");
+
+        Id = Guid.NewGuid();
+        Codigo = codigo.Trim();
+        CodigoNormalizado = Codigo.ToUpperInvariant();
+        Titulo = titulo.Trim();
+        PresupuestoEstimadoCRC = presupuestoEstimadoCRC;
+        FechaCierre = fechaCierre;
+        Estado = EstadoLicitacion.Borrador;
+        CreatedAt = fechaActual;
+        UpdatedAt = fechaActual;
+    }
+
+    public void Publicar(DateTimeOffset fechaActual)
+    {
+        if (Estado != EstadoLicitacion.Borrador)
+            throw new InvalidOperationException("Solo se puede publicar una licitación en borrador.");
+
+        if (FechaCierre <= fechaActual)
+            throw new InvalidOperationException("No se puede publicar una licitación con fecha de cierre vencida.");
+
+        Estado = EstadoLicitacion.Publicada;
+        UpdatedAt = fechaActual;
+    }
+
+    public void Cerrar(DateTimeOffset fechaActual)
+    {
+        if (Estado == EstadoLicitacion.Cerrada)
+            throw new InvalidOperationException("La licitación ya se encuentra cerrada.");
+
+        Estado = EstadoLicitacion.Cerrada;
+        UpdatedAt = fechaActual;
+    }
+}
