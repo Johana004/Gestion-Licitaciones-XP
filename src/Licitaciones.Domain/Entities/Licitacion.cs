@@ -4,6 +4,8 @@ public enum EstadoLicitacion
 {
     Borrador,
     Publicada,
+    Adjudicada,
+    Desierta,
     Cerrada
 }
 
@@ -16,6 +18,7 @@ public class Licitacion
     public EstadoLicitacion Estado { get; private set; }
     public DateTimeOffset FechaCierre { get; private set; }
     public decimal PresupuestoEstimadoCRC { get; private set; }
+    public Guid? OfertaGanadoraId { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
     public uint VersionConcurrencia { get; private set; }
@@ -56,6 +59,16 @@ public class Licitacion
             throw new InvalidOperationException("No se puede publicar una licitación con fecha de cierre vencida.");
 
         Estado = EstadoLicitacion.Publicada;
+        UpdatedAt = fechaActual;
+    }
+
+    public void Adjudicar(Guid ofertaGanadoraId, DateTimeOffset fechaActual)
+    {
+        if (Estado != EstadoLicitacion.Publicada)
+            throw new InvalidOperationException("Solo se puede adjudicar una licitación en estado 'Publicada'.");
+
+        OfertaGanadoraId = ofertaGanadoraId;
+        Estado = EstadoLicitacion.Adjudicada;
         UpdatedAt = fechaActual;
     }
 
