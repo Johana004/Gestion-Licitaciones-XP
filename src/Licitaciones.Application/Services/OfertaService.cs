@@ -40,4 +40,15 @@ public class OfertaService
 
         return new OfertaResponseDto(oferta.Id, oferta.LicitacionId, oferta.ProveedorId, oferta.MontoOfertaCRC, oferta.FechaPresentacion);
     }
+    public async Task<IEnumerable<OfertaResponseDto>> ObtenerOfertasPorLicitacionAsync(Guid licitacionId, CancellationToken cancellationToken = default)
+{
+    var ofertas = await _ofertaRepository.GetByLicitacionIdAsync(licitacionId, cancellationToken);
+    return ofertas.Select(o => new OfertaResponseDto(
+        o.Id,
+        o.LicitacionId,
+        o.ProveedorId,
+        o.MontoOfertaCRC,
+        o.FechaPresentacion
+    ));
+}
 }
