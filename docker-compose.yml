@@ -12,8 +12,7 @@ services:
       - "8081:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=licitaciones-db;Port=5432;Database=LicitacionesDb;Username=postgres;Password=postgres
-    depends_on:
+      - ConnectionStrings__DefaultConnection=Host=licitaciones-db;Port=5432;Database=LicitacionesDb;Username=postgres;Password=Eren2004    depends_on:
       - licitaciones-db
 
   licitaciones-db:
