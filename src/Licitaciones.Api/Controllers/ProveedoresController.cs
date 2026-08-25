@@ -34,18 +34,7 @@ public class ProveedoresController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CrearProveedorDto dto, CancellationToken cancellationToken)
     {
-        try
-        {
-            var nuevoProveedor = await _proveedorService.CrearAsync(dto, cancellationToken);
-            return CreatedAtAction(nameof(GetById), new { id = nuevoProveedor.Id }, nuevoProveedor);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { mensaje = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new { mensaje = ex.Message });
-        }
+        var creado = await _proveedorService.CrearProveedorAsync(dto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = creado.Id }, creado);
     }
 }
