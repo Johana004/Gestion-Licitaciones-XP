@@ -42,4 +42,5 @@ public async Task<IActionResult> ObtenerPorLicitacion(Guid licitacionId, Cancell
     var ofertas = await _service.ObtenerOfertasPorLicitacionAsync(licitacionId, cancellationToken);
     return Ok(ofertas);
 }
+
 }
