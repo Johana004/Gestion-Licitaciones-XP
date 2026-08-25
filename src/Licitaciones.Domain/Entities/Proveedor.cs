@@ -4,35 +4,44 @@ namespace Licitaciones.Domain.Entities;
 
 public class Proveedor
 {
-    public Guid Id { get; private set; }
-    public string Nombre { get; private set; }
+    private static readonly Regex RegexNombreValido = new(@"^[\p{L}\p{N}\s.,()]+$", RegexOptions.Compiled);
 
-    public Proveedor(string nombre)
+    public Guid Id { get; private set; }
+    public string Nombre { get; private set; } = null!;
+    public string NombreNormalizado { get; private set; } = null!;
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset UpdatedAt { get; private set; }
+    public uint VersionConcurrencia { get; private set; }
+
+    private Proveedor() { } // Constructor privado para EF Core
+
+    public Proveedor(string nombre, DateTimeOffset fechaActual)
     {
         if (string.IsNullOrWhiteSpace(nombre))
         {
             throw new ArgumentException("El nombre del proveedor no puede estar vacío.");
         }
 
-        // 1. Validar caracteres permitidos: letras, números, espacios, puntos, comas y paréntesis.
-        if (!Regex.IsMatch(nombre, @"^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ.,()]+$"))
+        var nombreLimpio = NormalizarNombre(nombre);
+
+        if (!RegexNombreValido.IsMatch(nombreLimpio))
         {
-            throw new ArgumentException("El nombre contiene caracteres especiales no permitidos.");
+            throw new ArgumentException("El nombre contiene caracteres especiales no permitidos. Solo se admiten letras, números, espacios, puntos, comas y paréntesis.");
         }
 
-        // 2. Normalizar el nombre (Eliminar espacios al inicio/final y reducir espacios internos repetidos)
-        Nombre = NormalizarNombre(nombre);
         Id = Guid.NewGuid();
+        Nombre = nombreLimpio;
+        NombreNormalizado = nombreLimpio.ToUpperInvariant();
+        CreatedAt = fechaActual;
+        UpdatedAt = fechaActual;
     }
 
-    private string NormalizarNombre(string texto)
+    public static string NormalizarNombre(string texto)
     {
-        // Elimina espacios extras en los bordes
+        if (string.IsNullOrWhiteSpace(texto)) return string.Empty;
+        
         string resultado = texto.Trim();
-        
-        // Reemplaza múltiples espacios internos por uno solo
         resultado = Regex.Replace(resultado, @"\s+", " ");
-        
-        return resultado;
+        return resultado.Normalize();
     }
 }
