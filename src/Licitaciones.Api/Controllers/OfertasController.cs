@@ -36,4 +36,10 @@ public class OfertasController : ControllerBase
             return BadRequest(new { mensaje = ex.Message });
         }
     }
+    [HttpGet("licitacion/{licitacionId:guid}")]
+public async Task<IActionResult> ObtenerPorLicitacion(Guid licitacionId, CancellationToken cancellationToken)
+{
+    var ofertas = await _service.ObtenerOfertasPorLicitacionAsync(licitacionId, cancellationToken);
+    return Ok(ofertas);
+}
 }

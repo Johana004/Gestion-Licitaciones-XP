@@ -41,43 +41,56 @@ public class LicitacionesController : ControllerBase
     }
 
     [HttpPut("{id:guid}/publicar")]
-public async Task<IActionResult> Publicar(Guid id, CancellationToken cancellationToken)
-{
-    try
+    public async Task<IActionResult> Publicar(Guid id, CancellationToken cancellationToken)
     {
-        var result = await _service.PublicarAsync(id, cancellationToken);
-        return Ok(result);
+        try
+        {
+            var result = await _service.PublicarAsync(id, cancellationToken);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { mensaje = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { mensaje = ex.Message });
+        }
     }
-    catch (KeyNotFoundException ex)
+
+    [HttpPut("{id:guid}/cerrar")]
+    public async Task<IActionResult> Cerrar(Guid id, CancellationToken cancellationToken)
     {
-        return NotFound(new { mensaje = ex.Message });
+        try
+        {
+            var result = await _service.CerrarAsync(id, cancellationToken);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { mensaje = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { mensaje = ex.Message });
+        }
     }
-    catch (InvalidOperationException ex)
+
+    [HttpPost("{id:guid}/adjudicar")]
+    public async Task<IActionResult> Adjudicar(Guid id, [FromBody] AdjudicarLicitacionDto dto, CancellationToken cancellationToken)
     {
-        return BadRequest(new { mensaje = ex.Message });
+        try
+        {
+            var result = await _service.AdjudicarLicitacionAsync(id, dto.OfertaGanadoraId, cancellationToken);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { mensaje = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { mensaje = ex.Message });
+        }
     }
-}
-
-[HttpPut("{id:guid}/cerrar")]
-public async Task<IActionResult> Cerrar(Guid id, CancellationToken cancellationToken)
-{
-    try
-    {
-        var result = await _service.CerrarAsync(id, cancellationToken);
-        return Ok(result);
-    }
-    catch (KeyNotFoundException ex)
-    {
-        return NotFound(new { mensaje = ex.Message });
-    }
-    catch (InvalidOperationException ex)
-    {
-        return BadRequest(new { mensaje = ex.Message });
-    }
-}
-
-
-
-
-
 }
