@@ -7,43 +7,40 @@ namespace Licitaciones.Application.Services;
 public class ProveedorService : IProveedorService
 {
     private readonly IProveedorRepository _proveedorRepository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public ProveedorService(IProveedorRepository proveedorRepository, IUnitOfWork unitOfWork)
+    public ProveedorService(IProveedorRepository proveedorRepository)
     {
         _proveedorRepository = proveedorRepository;
-        _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<ProveedorDto>> ObtenerTodosAsync(CancellationToken cancellationToken = default)
+    public async Task<ProveedorResponseDto> CrearProveedorAsync(CrearProveedorDto dto, CancellationToken cancellationToken = default)
     {
-        var proveedores = await _proveedorRepository.GetAllAsync(cancellationToken);
-        return proveedores.Select(p => new ProveedorDto(p.Id, p.Nombre));
-    }
-
-    public async Task<ProveedorDto?> ObtenerPorIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        var proveedor = await _proveedorRepository.GetByIdAsync(id, cancellationToken);
-        if (proveedor == null) return null;
-
-        return new ProveedorDto(proveedor.Id, proveedor.Nombre);
-    }
-
-    public async Task<ProveedorDto> CrearAsync(CrearProveedorDto dto, CancellationToken cancellationToken = default)
-    {
-        // Validar si ya existe un proveedor con el mismo nombre
-        var existente = await _proveedorRepository.GetByNombreAsync(dto.Nombre, cancellationToken);
-        if (existente != null)
+        var nombreNormalizado = Proveedor.NormalizarNombre(dto.Nombre).ToUpperInvariant();
+        
+        var existe = await _proveedorRepository.GetByNombreNormalizadoAsync(nombreNormalizado, cancellationToken);
+        if (existe != null)
         {
             throw new InvalidOperationException($"Ya existe un proveedor registrado con el nombre '{dto.Nombre}'.");
         }
 
-        // Instanciar entidad (aplica las reglas de negocio y normalización creadas en la entidad)
-        var nuevoProveedor = new Proveedor(dto.Nombre);
+        var proveedor = new Proveedor(dto.Nombre, DateTimeOffset.UtcNow);
 
-        await _proveedorRepository.AddAsync(nuevoProveedor, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _proveedorRepository.AddAsync(proveedor, cancellationToken);
 
-        return new ProveedorDto(nuevoProveedor.Id, nuevoProveedor.Nombre);
+        return new ProveedorResponseDto(proveedor.Id, proveedor.Nombre, proveedor.CreatedAt);
+    }
+
+    public async Task<IEnumerable<ProveedorResponseDto>> ObtenerTodosAsync(CancellationToken cancellationToken = default)
+    {
+        var proveedores = await _proveedorRepository.GetAllAsync(cancellationToken);
+        return proveedores.Select(p => new ProveedorResponseDto(p.Id, p.Nombre, p.CreatedAt));
+    }
+
+    public async Task<ProveedorResponseDto?> ObtenerPorIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var proveedor = await _proveedorRepository.GetByIdAsync(id, cancellationToken);
+        if (proveedor == null) return null;
+
+        return new ProveedorResponseDto(proveedor.Id, proveedor.Nombre, proveedor.CreatedAt);
     }
 }
