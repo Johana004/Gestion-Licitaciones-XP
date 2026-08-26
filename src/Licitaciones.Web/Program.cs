@@ -1,29 +1,49 @@
+using Scalar.AspNetCore;
+using Microsoft.AspNetCore.OpenApi;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Agregar servicios MVC / Controladores
 builder.Services.AddControllersWithViews();
+
+// 2. Agregar soporte para OpenAPI / Swagger
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configuración del pipeline de solicitudes HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// 3. Mapear los endpoints de OpenAPI y la interfaz de Scalar (solo en desarrollo o global)
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi(); // Expone /openapi/v1.json
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("Gestión Licitaciones API")
+            .WithTheme(ScalarTheme.Purple)
+            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    }); // Expone /scalar/v1
+}
 
+// 4. Ruta por defecto para el portal MVC
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Licitaciones}/{action=Index}/{id?}");
 
 app.Run();
+
+public partial class Program { }
