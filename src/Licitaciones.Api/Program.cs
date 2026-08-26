@@ -29,19 +29,19 @@ using (var scope = app.Services.CreateScope())
     {
         var now = DateTimeOffset.UtcNow;
         context.NivelesAprobacion.AddRange(
-            new NivelAprobacion(0.01m, 999999.99m, "Encargado de área", now),
-            new NivelAprobacion(1000000.00m, 9999999.99m, "Gerencia", now),
-            new NivelAprobacion(10000000.00m, null, "Junta Directiva", now)
+            new NivelAprobacion(0m, 5000000m, "Jefatura"),
+            new NivelAprobacion(5000000.01m, 20000000m, "Gerencia"),
+            new NivelAprobacion(20000000.01m, decimal.MaxValue, "Junta Directiva")
         );
         await context.SaveChangesAsync();
     }
 
-    if (!await context.TiposCambio.AnyAsync())
-    {
-        var now = DateTimeOffset.UtcNow;
-        context.TiposCambio.Add(new TipoCambio(505.50m, now, true, now));
-        await context.SaveChangesAsync();
-    }
+   if (!await context.TiposCambio.AnyAsync())
+{
+    var now = DateTimeOffset.UtcNow;
+    context.TiposCambio.Add(new TipoCambio(500.00m, now, true));
+    await context.SaveChangesAsync();
+}
 }
 
 // 4. Configurar OpenAPI y la interfaz visual en desarrollo
