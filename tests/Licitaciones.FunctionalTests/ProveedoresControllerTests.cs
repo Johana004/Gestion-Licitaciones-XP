@@ -10,7 +10,11 @@ public class ProveedoresControllerTests : IClassFixture<CustomWebApplicationFact
 
     public ProveedoresControllerTests(CustomWebApplicationFactory factory)
     {
-        _client = factory.CreateClient();
+        // Se deshabilita el seguimiento automático de redirecciones
+        _client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false
+        });
     }
 
     [Fact]
@@ -35,24 +39,24 @@ public class ProveedoresControllerTests : IClassFixture<CustomWebApplicationFact
     }
 
     [Fact]
-public async Task Crear_PostValido_RedireccionaAIndex()
-{
-    // 1. Datos codificados como formulario URL-encoded
-    var formData = new Dictionary<string, string>
+    public async Task Crear_PostValido_RedireccionaAIndex()
     {
-        { "CedulaJuridica", "3-101-123456" },
-        { "NombreRazonSocial", "Empresa Ejemplo S.A." },
-        { "EmailContacto", "contacto@ejemplo.com" },
-        { "Telefono", "2460-1234" }
-    };
+        // 1. Datos codificados como formulario URL-encoded
+        var formData = new Dictionary<string, string>
+        {
+            { "CedulaJuridica", "3-101-123456" },
+            { "NombreRazonSocial", "Empresa Ejemplo S.A." },
+            { "EmailContacto", "contacto@ejemplo.com" },
+            { "Telefono", "2460-1234" }
+        };
 
-    var content = new FormUrlEncodedContent(formData);
+        var content = new FormUrlEncodedContent(formData);
 
-    // 2. Ejecutar la petición POST
-    var response = await _client.PostAsync("/Proveedores/Crear", content);
+        // 2. Ejecutar la petición POST
+        var response = await _client.PostAsync("/Proveedores/Crear", content);
 
-    // 3. Verificación
-    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.Equal("/Proveedores", response.Headers.Location?.OriginalString);
-}
+        // 3. Verificación
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.Equal("/Proveedores", response.Headers.Location?.OriginalString);
+    }
 }

@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-
+using System.Diagnostics.CodeAnalysis;
 namespace Licitaciones.Web.Models;
 
+[ExcludeFromCodeCoverage]
 public class CrearLicitacionViewModel
 {
     [Required(ErrorMessage = "El código es obligatorio.")]
