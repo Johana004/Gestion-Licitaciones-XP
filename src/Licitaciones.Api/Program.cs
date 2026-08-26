@@ -3,8 +3,10 @@ using Licitaciones.Domain.Entities;
 using Licitaciones.Infrastructure;
 using Licitaciones.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-
 using Scalar.AspNetCore;
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: ExcludeFromCodeCoverage]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Endpoint de salud para las probes de Kubernetes (Mapear ANTES de redirecciones)
+app.MapHealthChecks("/health");
 
 // 3. Semilla de Niveles de Aprobación y Tipo de Cambio
 using (var scope = app.Services.CreateScope())
@@ -52,11 +57,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(); // Expone la UI gráfica en /scalar/v1
 }
-
-// Endpoint de salud para las probes de Kubernetes (startup, liveness, readiness)
-app.MapHealthChecks("/health");
-
-app.UseHttpsRedirection();
+else
+{
+    // Solo redirigir a HTTPS fuera de desarrollo si no estás en Kubernetes sin SSL termination
+    app.UseHttpsRedirection();
+}
 
 // 5. Mapear las rutas de los controladores
 app.MapControllers();

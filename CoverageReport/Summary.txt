@@ -1,0 +1,56 @@
+Summary
+  Generated on: 26/08/2026 - 03:05:50 p. m.
+  Coverage date: 26/08/2026 - 02:57:50 p. m. - 26/08/2026 - 02:58:12 p. m.
+  Parser: MultiReport (3x Cobertura)
+  Assemblies: 4
+  Classes: 28
+  Files: 26
+  Line coverage: 43.3%
+  Covered lines: 290
+  Uncovered lines: 379
+  Coverable lines: 669
+  Total lines: 1199
+  Branch coverage: 23% (30 of 130)
+  Covered branches: 30
+  Total branches: 130
+  Method coverage: 46.1% (60 of 130)
+  Full method coverage: 38.4% (50 of 130)
+  Covered methods: 60
+  Fully covered methods: 50
+  Total methods: 130
+
+Licitaciones.Application                                                                28.2%
+  Licitaciones.Application.DependencyInjection                                           100%
+  Licitaciones.Application.Services.LicitacionEvaluadorService                          77.2%
+  Licitaciones.Application.Services.LicitacionService                                   43.6%
+  Licitaciones.Application.Services.MejorOfertaService                                     0%
+  Licitaciones.Application.Services.OfertaService                                          0%
+  Licitaciones.Application.Services.ProveedorService                                    34.7%
+
+Licitaciones.Domain                                                                     53.5%
+  Licitaciones.Domain.Entities.Licitacion                                               66.6%
+  Licitaciones.Domain.Entities.NivelAprobacion                                             0%
+  Licitaciones.Domain.Entities.Oferta                                                   73.9%
+  Licitaciones.Domain.Entities.Proveedor                                                89.6%
+  Licitaciones.Domain.Entities.TipoCambio                                               61.9%
+  Licitaciones.Domain.Services.LicitacionDomainService                                     0%
+  Licitaciones.Domain.Services.MejorOfertaResultado                                        0%
+
+Licitaciones.Infrastructure                                                             66.6%
+  Licitaciones.Infrastructure.DependencyInjection                                        100%
+  Licitaciones.Infrastructure.Persistence.Configurations.NivelAprobacionConfiguration    100%
+  Licitaciones.Infrastructure.Persistence.Configurations.ProveedorConfiguration          100%
+  Licitaciones.Infrastructure.Persistence.Configurations.TipoCambioConfiguration         100%
+  Licitaciones.Infrastructure.Persistence.Repositories.LicitacionRepository             66.6%
+  Licitaciones.Infrastructure.Persistence.Repositories.OfertaRepository                 28.5%
+  Licitaciones.Infrastructure.Persistence.Repositories.UnitOfWork                          0%
+  Licitaciones.Infrastructure.Repositories.ProveedorRepository                          27.2%
+
+Licitaciones.Web                                                                        27.8%
+  Licitaciones.Web.Controllers.CrearLicitacionModel                                        0%
+  Licitaciones.Web.Controllers.CrearOfertaViewModel                                        0%
+  Licitaciones.Web.Controllers.HomeController                                              0%
+  Licitaciones.Web.Controllers.LicitacionesController                                      0%
+  Licitaciones.Web.Controllers.OfertasController                                           0%
+  Licitaciones.Web.Controllers.ProveedoresController                                    91.6%
+  Program                                                                               67.8%
