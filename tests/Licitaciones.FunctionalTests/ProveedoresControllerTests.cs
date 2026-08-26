@@ -1,16 +1,14 @@
 using System.Net;
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
-using Licitaciones.Web;
 
 namespace Licitaciones.FunctionalTests;
 
-public class ProveedoresControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class ProveedoresControllerTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
-    public ProveedoresControllerTests(WebApplicationFactory<Program> factory)
+    public ProveedoresControllerTests(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
@@ -22,7 +20,7 @@ public class ProveedoresControllerTests : IClassFixture<WebApplicationFactory<Pr
         var response = await _client.GetAsync("/Proveedores");
 
         // Assert
-        response.EnsureSuccessStatusCode(); // Código HTTP 200 OK
+        response.EnsureSuccessStatusCode();
         Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType?.ToString());
     }
 
@@ -36,28 +34,24 @@ public class ProveedoresControllerTests : IClassFixture<WebApplicationFactory<Pr
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-  [Fact]
+    [Fact]
 public async Task Crear_PostValido_RedireccionaAIndex()
 {
-    // Arrange
-    var postData = new Dictionary<string, string>
+    // 1. Datos codificados como formulario URL-encoded
+    var formData = new Dictionary<string, string>
     {
-        { "Nombre", "Proveedor Test S.A." }
+        { "CedulaJuridica", "3-101-123456" },
+        { "NombreRazonSocial", "Empresa Ejemplo S.A." },
+        { "EmailContacto", "contacto@ejemplo.com" },
+        { "Telefono", "2460-1234" }
     };
 
-    var content = new FormUrlEncodedContent(postData);
+    var content = new FormUrlEncodedContent(formData);
 
-    // Act
+    // 2. Ejecutar la petición POST
     var response = await _client.PostAsync("/Proveedores/Crear", content);
 
-    // Si no fue exitoso, lee el HTML/JSON devuelto para ver los errores de validación
-    if (response.StatusCode != HttpStatusCode.Redirect)
-    {
-        var errorContent = await response.Content.ReadAsStringAsync();
-        throw new Exception($"Falló con estado {response.StatusCode}. Contenido de respuesta:\n{errorContent}");
-    }
-
-    // Assert
+    // 3. Verificación
     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
     Assert.Equal("/Proveedores", response.Headers.Location?.OriginalString);
 }
