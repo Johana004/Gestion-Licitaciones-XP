@@ -1,7 +1,5 @@
 ﻿name: CI/CD Pipeline
 
-name: CI/CD Pipeline
-
 on:
   push:
     branches: ["main"]
@@ -9,32 +7,30 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
-# ...existing code...
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout del codigo
-      uses: actions/checkout@v4
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
 
-    - name: Configurar .NET 9
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
+      - name: Configurar .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
 
-    - name: Restaurar dependencias
-      run: dotnet restore
+      - name: Restaurar dependencias
+        run: dotnet restore
 
-    - name: Compilar la solucion
-      run: dotnet build --no-restore --configuration Release
+      - name: Compilar la solucion
+        run: dotnet build --no-restore --configuration Release
 
-    - name: Ejecutar Pruebas Unitarias
-      run: dotnet test --no-build --configuration Release --verbosity normal
+      - name: Ejecutar pruebas
+        run: dotnet test --no-build --configuration Release --verbosity normal
 
-    - name: Construir Imagen Docker
-      run: docker build -t licitaciones-app:latest .
+      - name: Construir imagen Docker
+        run: docker build -t licitaciones-app:latest .
 
-    - name: Validar Manifiestos de Kubernetes
-      run: kubectl apply --dry-run=client -f k8s/
+      - name: Validar Kubernetes
+        run: kubectl apply --dry-run=client -f k8s/
