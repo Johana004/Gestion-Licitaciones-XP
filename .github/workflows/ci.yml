@@ -1,0 +1,37 @@
+﻿name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar .NET 9
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restaurar dependencias
+      run: dotnet restore
+
+    - name: Compilar la solución
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Ejecutar Pruebas Unitarias e Integración con Cobertura
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
+    - name: Construir Imagen Docker
+      run: docker build -t licitaciones-app:latest .
+
+    - name: Validar Manifiestos de Kubernetes
+      run: |
+        kubectl apply --dry-run=client -f k8s/
