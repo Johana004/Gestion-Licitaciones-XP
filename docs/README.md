@@ -1,25 +1,37 @@
- Sistema de Gestión de Licitaciones - Metodología XP
+# Gestión Licitaciones XP
 
-Bienvenido a la documentación oficial del Sistema de Gestión de Licitaciones, desarrollado como proyecto final para el curso de Metodologías Ágiles de Desarrollo de Software (ITI-822) de la Universidad Técnica Nacional
+> Plataforma backend containerizada y orquestada para la gestión y seguimiento de procesos licitatorios, desarrollada con .NET 9, PostgreSQL y Kubernetes bajo la metodología **Extreme Programming (XP)**.
 
-Este proyecto se ha construido aplicando de forma exclusiva y disciplinada las prácticas de la metodología ágil Extreme Programming (XP)
+---
 
-  Índice de Documentación
+## 🛠️ Stack Tecnológico
 
-Utilice los siguientes enlaces para navegar de forma estructurada por los componentes y bitácoras del proyecto:
+* **Lenguaje & Framework:** C# / .NET 9 Web API & MVC
+* **Base de Datos:** PostgreSQL con Entity Framework Core
+* **Documentación de API:** Scalar API Reference & OpenAPI
+* **Containerización:** Docker (*Multi-stage builds*)
+* **Orquestación:** Kubernetes (`kubectl`, Deployments, Services, PVC, Secrets)
+* **Metodología:** Extreme Programming (XP)
 
-  Planificación y Metodología XP
- [Plan de Liberación e Iteraciones (plan-xp.md)](plan-xp.md) — Planificación del proyecto y reglas de trabajo.
- [Historias de Usuario (historias-usuario.md)](historias-usuario.md) — Catálogo de historias de usuario y criterios de aceptación.
- [Bitácora de Desarrollo XP (bitacora-xp.md)](bitacora-xp.md) — Registro de resultados, TDD, refactorización y velocidad por iteración.
+---
 
-    Arquitectura y Diseño Técnico
- [Arquitectura General (arquitectura-general.md)](arquitectura-general.md) — Estructura modular, patrones y decisiones arquitectónicas
- [Modelo de Datos (modelo-datos.md)](modelo-datos.md) — Diagrama de base de datos relacional y restricciones de integridad en PostgreSQL
- [Documentación de la API (api.md)](api.md) — Endpoints REST, contratos, respuestas ProblemDetails y ejemplos.
- [Estrategia de Pruebas (pruebas.md)](pruebas.md) — Cobertura, escenarios de pruebas unitarias, integración y funcionales (E2E)
+## 📁 Estructura del Proyecto
 
-   Infraestructura, Despliegue y Herramientas
- [Guía de Docker (docker.md)](docker.md) — Instrucciones para compilar y ejecutar con Docker Compose localmente.
- [Guía de Kubernetes (kubernetes.md)](kubernetes.md) — Manifiestos de despliegue, StatefulSets, Probes y persistencia.
- [Declaración de Uso de IA (uso-ia.md)](uso-ia.md) — Registro transparente del uso de herramientas de Inteligencia Artificial
+```text
+├── docs/                   # Documentación técnica completa del proyecto
+│   ├── api.md              # Especificación de Endpoints y OpenAPI
+│   ├── arquitectura-general.md # Diseño en capas y flujo de datos
+│   ├── bitacora-xp.md      # Registro metodológico XP y sprints
+│   ├── docker.md           # Configuración de contenedores
+│   ├── historias-usuario.md# Requerimientos y casos de uso XP
+│   ├── integracion-modulos.md # Comunicación entre capas
+│   ├── kubernetes.md       # Despliegue en K8s y troubleshooting
+│   ├── modelo-datos.md     # Esquema relacional de PostgreSQL
+│   ├── plan-xp.md          # Planificación e iteraciones
+│   ├── pruebas.md          # Estrategia y reporte de pruebas
+│   ├── uso-ia.md           # Registro de AI-Assisted Engineering
+│   └── vision-alcance.md   # Alcance y objetivos del negocio
+├── k8s/                    # Manifiestos de Kubernetes
+│   └── app-deployment.yaml # Deployment y servicios del cluster
+├── src/                    # Código fuente del proyecto .NET
+└── README.md               # Documento principal
