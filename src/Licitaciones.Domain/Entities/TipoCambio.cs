@@ -2,28 +2,31 @@ namespace Licitaciones.Domain.Entities;
 
 public class TipoCambio
 {
-    public Guid Id { get; private set; }
-    public decimal CRCPorUSD { get; private set; }
+    public Guid Id { get; private set; } = Guid.NewGuid();
+    public decimal CRCporUSD { get; private set; }
     public DateTimeOffset FechaVigencia { get; private set; }
     public bool Activo { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset UpdatedAt { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? UpdatedAt { get; private set; }
 
-    private TipoCambio() { } // Constructor para EF Core
+    private TipoCambio() { } // EF Core
 
-    public TipoCambio(decimal crcPorUsd, DateTimeOffset fechaVigencia, bool activo, DateTimeOffset fechaActual)
+    public TipoCambio(decimal crcPorUsd, DateTimeOffset fechaVigencia, bool activo = false)
     {
         if (crcPorUsd <= 0)
-            throw new ArgumentException("El tipo de cambio debe ser mayor a cero.");
+            throw new ArgumentException("El tipo de cambio debe ser mayor que cero.");
 
-        Id = Guid.NewGuid();
-        CRCPorUSD = crcPorUsd;
+        CRCporUSD = crcPorUsd;
         FechaVigencia = fechaVigencia;
         Activo = activo;
-        CreatedAt = fechaActual;
-        UpdatedAt = fechaActual;
     }
 
     public void Activar() => Activo = true;
     public void Desactivar() => Activo = false;
+
+    public decimal ConvertirCRCaUSD(decimal montoCRC)
+    {
+        if (CRCporUSD <= 0) return 0;
+        return Math.Round(montoCRC / CRCporUSD, 2, MidpointRounding.AwayFromZero);
+    }
 }
