@@ -51,8 +51,8 @@ public class LicitacionesDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.LicitacionId, e.ProveedorId }).IsUnique(); // Unicidad por proveedor/licitación
-            entity.Property(e => e.MontoOfertaCRC).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.VersionConcurrencia).IsConcurrencyToken();
+            entity.Property(e => e.MontoOfertadoCRC).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Version).IsConcurrencyToken();
         });
     }
 }

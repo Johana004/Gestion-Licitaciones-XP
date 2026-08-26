@@ -32,7 +32,7 @@ public class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.LicitacionId, e.ProveedorId }).IsUnique();
-            entity.Property(e => e.MontoOfertaCRC).HasColumnType("numeric(18,2)");
+            entity.Property(e => e.MontoOfertadoCRC).HasColumnType("numeric(18,2)");
         });
 
         // Proveedor
@@ -55,7 +55,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<TipoCambio>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.CRCPorUSD).HasColumnType("numeric(18,2)");
+            entity.Property(e => e.CRCporUSD).HasColumnType("numeric(18,2)");
         });
     }
 }

@@ -10,7 +10,7 @@ public class TipoCambioConfiguration : IEntityTypeConfiguration<TipoCambio>
     {
         builder.HasKey(t => t.Id);
 
-        builder.Property(t => t.CRCPorUSD)
+        builder.Property(t => t.CRCporUSD)
             .HasPrecision(18, 2)
             .IsRequired();
 
@@ -20,11 +20,11 @@ public class TipoCambioConfiguration : IEntityTypeConfiguration<TipoCambio>
             new 
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-                CRCPorUSD = 505.50m, // <-- Usar CRCPorUSD en lugar de Valor
+                CRCporUSD = 505.50m,
                 FechaVigencia = now,
                 Activo = true,
                 CreatedAt = now,
-                UpdatedAt = now
+                UpdatedAt = (DateTimeOffset?)null
             }
         );
     }
