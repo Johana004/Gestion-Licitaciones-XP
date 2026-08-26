@@ -1,0 +1,36 @@
+@model Licitaciones.Web.Controllers.CrearOfertaViewModel
+
+@{
+    ViewData["Title"] = "Presentar Oferta";
+}
+
+<div class="row justify-content-center my-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-send-check"></i> Presentar Oferta Económica</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Crear" method="post">
+                    <input type="hidden" asp-for="LicitacionId" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Monto Ofertado (CRC)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₡</span>
+                            <input asp-for="MontoOfertadoCRC" class="form-control" type="number" step="0.01" required placeholder="0.00" />
+                        </div>
+                        <span asp-validation-for="MontoOfertadoCRC" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a asp-controller="Licitaciones" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Enviar Oferta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
