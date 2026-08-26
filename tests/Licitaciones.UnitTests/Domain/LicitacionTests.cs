@@ -1,5 +1,6 @@
 using Licitaciones.Domain.Entities;
 using Xunit;
+using Licitaciones.Domain.Enums;
 
 namespace Licitaciones.UnitTests.Domain;
 
