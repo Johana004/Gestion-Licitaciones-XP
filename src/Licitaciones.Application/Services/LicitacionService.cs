@@ -82,7 +82,7 @@ public class LicitacionService
             licitacion.Codigo,
             licitacion.Estado.ToString(),
             ofertaGanadora.Id,
-            ofertaGanadora.MontoOfertaCRC
+            ofertaGanadora.MontoOfertadoCRC
         );
     }
 

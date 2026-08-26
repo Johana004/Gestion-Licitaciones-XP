@@ -28,8 +28,9 @@ public class MejorOfertaService
             ?? throw new KeyNotFoundException($"No se encontró la licitación con ID {licitacionId}.");
 
         var tc = await _tipoCambioRepository.GetActivoAsync(cancellationToken);
-        decimal tipoCambio = tc?.CRCPorUSD ?? 500.00m; // Tasa por defecto si no hay activa
-
+        
+        // Uso de la propiedad 'Monto' de la entidad TipoCambio
+        decimal tipoCambio = tc?.CRCporUSD ?? 500.00m;
         var ofertas = (await _ofertaRepository.GetByLicitacionIdAsync(licitacionId, cancellationToken)).ToList();
 
         if (!ofertas.Any())
@@ -46,15 +47,13 @@ public class MejorOfertaService
             );
         }
 
-        // Regla: Menor monto CRC. En empate, la registrada primero (CreatedAt más antiguo)
-        // Regla: Menor monto CRC. En empate, la registrada primero (FechaRegistro más antiguo)
         var mejorOferta = ofertas
-    .OrderBy(o => o.MontoOfertaCRC)
-    .ThenBy(o => o.FechaPresentacion) // <-- Cambiado de CreatedAt a FechaRegistro
-    .First();
+            .OrderBy(o => o.MontoOfertadoCRC)
+            .ThenBy(o => o.FechaPresentacion)
+            .First();
 
         decimal presupuesto = licitacion.PresupuestoEstimadoCRC;
-        decimal montoOferta = mejorOferta.MontoOfertaCRC;
+        decimal montoOferta = mejorOferta.MontoOfertadoCRC;
 
         // Porcentaje de ahorro = ((Presupuesto CRC - Mejor oferta CRC) / Presupuesto CRC) * 100
         decimal porcentajeAhorro = Math.Round(((presupuesto - montoOferta) / presupuesto) * 100, 2);
