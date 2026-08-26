@@ -4,9 +4,10 @@ metadata:
   name: postgres-service
   namespace: licitaciones-namespace
 spec:
-  ports:
-    - port: 5432
-      targetPort: 5432
   selector:
     app: postgres
-  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP

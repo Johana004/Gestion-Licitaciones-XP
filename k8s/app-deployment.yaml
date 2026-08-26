@@ -20,14 +20,32 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+          envFrom:
+            - configMapRef:
+                name: app-configmap
           env:
-            - name: ASPNETCORE_ENVIRONMENT
-              value: "Development"
             - name: ConnectionStrings__DefaultConnection
               valueFrom:
                 secretKeyRef:
                   name: app-secret
                   key: ConnectionStrings__DefaultConnection
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 5
           resources:
             requests:
               memory: "128Mi"
@@ -35,22 +53,3 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-          # Sondas desactivadas temporalmente mientras no exista /health
-          # startupProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 8080
-          #   failureThreshold: 10
-          #   periodSeconds: 5
-          # livenessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 8080
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 10
-          # readinessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 8080
-          #   initialDelaySeconds: 5
-          #   periodSeconds: 5

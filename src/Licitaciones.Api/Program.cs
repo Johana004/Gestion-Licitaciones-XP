@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
+// Registrar servicio de Health Checks para Kubernetes
+builder.Services.AddHealthChecks();
 
 // 2. Registrar controladores y la API nativa de OpenAPI
 builder.Services.AddControllers();
@@ -36,12 +38,12 @@ using (var scope = app.Services.CreateScope())
         await context.SaveChangesAsync();
     }
 
-   if (!await context.TiposCambio.AnyAsync())
-{
-    var now = DateTimeOffset.UtcNow;
-    context.TiposCambio.Add(new TipoCambio(500.00m, now, true));
-    await context.SaveChangesAsync();
-}
+    if (!await context.TiposCambio.AnyAsync())
+    {
+        var now = DateTimeOffset.UtcNow;
+        context.TiposCambio.Add(new TipoCambio(500.00m, now, true));
+        await context.SaveChangesAsync();
+    }
 }
 
 // 4. Configurar OpenAPI y la interfaz visual en desarrollo
@@ -50,6 +52,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(); // Expone la UI gráfica en /scalar/v1
 }
+
+// Endpoint de salud para las probes de Kubernetes (startup, liveness, readiness)
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 
