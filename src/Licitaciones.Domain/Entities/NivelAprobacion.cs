@@ -2,31 +2,28 @@ namespace Licitaciones.Domain.Entities;
 
 public class NivelAprobacion
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; private set; } = Guid.NewGuid();
     public decimal MontoMinimoCRC { get; private set; }
     public decimal? MontoMaximoCRC { get; private set; }
-    public string Aprobador { get; private set; } = null!;
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset UpdatedAt { get; private set; }
+    public string Aprobador { get; private set; } = string.Empty;
+    public DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? UpdatedAt { get; private set; }
 
-    private NivelAprobacion() { }
+    private NivelAprobacion() { } // EF Core
 
-    public NivelAprobacion(decimal montoMinimoCRC, decimal? montoMaximoCRC, string aprobador, DateTimeOffset fechaActual)
+    public NivelAprobacion(decimal montoMinimo, decimal? montoMaximo, string aprobador)
     {
-        if (montoMinimoCRC <= 0)
-            throw new ArgumentException("El monto mínimo debe ser mayor a cero.");
+        if (montoMinimo < 0)
+            throw new ArgumentException("El monto mínimo no puede ser negativo.");
 
-        if (montoMaximoCRC.HasValue && montoMaximoCRC.Value <= montoMinimoCRC)
-            throw new ArgumentException("El monto máximo debe ser mayor al monto mínimo.");
+        if (montoMaximo.HasValue && montoMaximo.Value <= montoMinimo)
+            throw new ArgumentException("El monto máximo debe ser estrictamente mayor que el monto mínimo.");
 
         if (string.IsNullOrWhiteSpace(aprobador))
-            throw new ArgumentException("El aprobador es obligatorio.");
+            throw new ArgumentException("El nombre del aprobador es requerido.");
 
-        Id = Guid.NewGuid();
-        MontoMinimoCRC = montoMinimoCRC;
-        MontoMaximoCRC = montoMaximoCRC;
+        MontoMinimoCRC = montoMinimo;
+        MontoMaximoCRC = montoMaximo;
         Aprobador = aprobador.Trim();
-        CreatedAt = fechaActual;
-        UpdatedAt = fechaActual;
     }
 }
