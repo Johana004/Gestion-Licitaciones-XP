@@ -1,13 +1,6 @@
 namespace Licitaciones.Domain.Entities;
 
-public enum EstadoLicitacion
-{
-    Borrador,
-    Publicada,
-    Adjudicada,
-    Desierta,
-    Cerrada
-}
+using Licitaciones.Domain.Enums;
 
 public class Licitacion
 {
@@ -22,6 +15,10 @@ public class Licitacion
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
     public uint VersionConcurrencia { get; private set; }
+
+    // Propiedad de navegación y backing field para EF Core
+    private readonly List<Oferta> _ofertas = new();
+    public IReadOnlyCollection<Oferta> Ofertas => _ofertas.AsReadOnly();
 
     private Licitacion() { } // EF Core
 
@@ -40,14 +37,22 @@ public class Licitacion
             throw new ArgumentException("La fecha de cierre debe ser futura.");
 
         Id = Guid.NewGuid();
-        Codigo = codigo.Trim();
-        CodigoNormalizado = Codigo.ToUpperInvariant();
+        SetCodigo(codigo);
         Titulo = titulo.Trim();
         PresupuestoEstimadoCRC = presupuestoEstimadoCRC;
         FechaCierre = fechaCierre;
         Estado = EstadoLicitacion.Borrador;
         CreatedAt = fechaActual;
         UpdatedAt = fechaActual;
+    }
+
+    public void SetCodigo(string codigo)
+    {
+        if (string.IsNullOrWhiteSpace(codigo))
+            throw new ArgumentException("El código no puede estar vacío.");
+        
+        Codigo = codigo.Trim();
+        CodigoNormalizado = Codigo.ToUpperInvariant();
     }
 
     public void Publicar(DateTimeOffset fechaActual)
@@ -79,5 +84,10 @@ public class Licitacion
 
         Estado = EstadoLicitacion.Cerrada;
         UpdatedAt = fechaActual;
+    }
+
+    public bool EstaVencida(DateTimeOffset fechaActual)
+    {
+        return Estado == EstadoLicitacion.Cerrada || fechaActual >= FechaCierre;
     }
 }

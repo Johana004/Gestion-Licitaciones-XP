@@ -1,6 +1,7 @@
 using Licitaciones.Application.DTOs;
 using Licitaciones.Domain.Entities;
 using Licitaciones.Domain.Repositories;
+using Licitaciones.Domain.Enums;
 
 namespace Licitaciones.Application.Services;
 
@@ -35,20 +36,23 @@ public class OfertaService
         if (ofertaExistente != null)
             throw new InvalidOperationException("El proveedor ya ha presentado una oferta para esta licitación.");
 
-        var oferta = new Oferta(dto.LicitacionId, dto.ProveedorId, dto.MontoOfertaCRC, DateTimeOffset.UtcNow);
+        // CORRECCIÓN 1: Pasamos el objeto 'licitacion' completo y 'MontoOfertadoCRC'
+        var oferta = new Oferta(licitacion, dto.ProveedorId, dto.MontoOfertaCRC, DateTimeOffset.UtcNow);
         await _ofertaRepository.AddAsync(oferta, cancellationToken);
 
-        return new OfertaResponseDto(oferta.Id, oferta.LicitacionId, oferta.ProveedorId, oferta.MontoOfertaCRC, oferta.FechaPresentacion);
+        // CORRECCIÓN 2: 'MontoOfertadoCRC' en el DTO de respuesta
+        return new OfertaResponseDto(oferta.Id, oferta.LicitacionId, oferta.ProveedorId, oferta.MontoOfertadoCRC, oferta.FechaPresentacion);
     }
+
     public async Task<IEnumerable<OfertaResponseDto>> ObtenerOfertasPorLicitacionAsync(Guid licitacionId, CancellationToken cancellationToken = default)
-{
-    var ofertas = await _ofertaRepository.GetByLicitacionIdAsync(licitacionId, cancellationToken);
-    return ofertas.Select(o => new OfertaResponseDto(
-        o.Id,
-        o.LicitacionId,
-        o.ProveedorId,
-        o.MontoOfertaCRC,
-        o.FechaPresentacion
-    ));
-}
+    {
+        var ofertas = await _ofertaRepository.GetByLicitacionIdAsync(licitacionId, cancellationToken);
+        return ofertas.Select(o => new OfertaResponseDto(
+            o.Id,
+            o.LicitacionId,
+            o.ProveedorId,
+            o.MontoOfertadoCRC, // CORRECCIÓN 3: 'MontoOfertadoCRC'
+            o.FechaPresentacion
+        ));
+    }
 }
