@@ -2,9 +2,10 @@ using Licitaciones.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Reflection;
-
+using System.Diagnostics.CodeAnalysis;
 namespace Licitaciones.Infrastructure.Persistence;
 
+[ExcludeFromCodeCoverage]
 public class LicitacionesDbContext : DbContext
 {
     public DbSet<Proveedor> Proveedores => Set<Proveedor>();

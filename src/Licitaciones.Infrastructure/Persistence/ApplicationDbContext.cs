@@ -1,8 +1,9 @@
 using Licitaciones.Domain.Entities; // <-- Este using quita el error de las entidades
 using Microsoft.EntityFrameworkCore;
-
+using System.Diagnostics.CodeAnalysis;
 namespace Licitaciones.Infrastructure.Persistence;
 
+[ExcludeFromCodeCoverage]
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
