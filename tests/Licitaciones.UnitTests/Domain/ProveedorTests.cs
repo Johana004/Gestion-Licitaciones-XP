@@ -13,7 +13,9 @@ public class ProveedorTests
         string nombreEsperadoNormalizado = "Empresa Central";
 
         // Act (Actuar)
-        var proveedor = new Proveedor(nombreConEspacios);
+        var proveedor = new Proveedor(
+             nombreConEspacios,
+             DateTimeOffset.UtcNow);
 
         // Assert (Afirmar)
         Assert.Equal(nombreEsperadoNormalizado, proveedor.Nombre);
@@ -26,6 +28,7 @@ public class ProveedorTests
         string nombreInvalido = "Empresa@Central#";
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => new Proveedor(nombreInvalido));
+        Assert.Throws<ArgumentException>(() =>
+    new Proveedor(nombreInvalido, DateTimeOffset.UtcNow));
     }
 }
