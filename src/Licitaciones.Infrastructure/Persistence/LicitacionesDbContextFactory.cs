@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Licitaciones.Infrastructure.Persistence;
 
+[ExcludeFromCodeCoverage]
 public class LicitacionesDbContextFactory : IDesignTimeDbContextFactory<LicitacionesDbContext>
 {
     public LicitacionesDbContext CreateDbContext(string[] args)
